@@ -30,7 +30,8 @@ namespace LiveSplit.View
         private const int SPLITTIMEINDEX = 2;
         private const int SEGMENTTIMEINDEX = 3;
         private const int BESTSEGMENTINDEX = 4;
-        private const int CUSTOMCOMPARISONSINDEX = 5;
+        private const int SWITCHTIMEINDEX = 5;
+        private const int CUSTOMCOMPARISONSINDEX = 6;
 
         public IRun Run { get; set; }
         public LiveSplitState CurrentState { get; set; }
@@ -194,6 +195,14 @@ namespace LiveSplit.View
 
             column = new DataGridViewTextBoxColumn();
             column.Name = "Best Segment";
+            column.Width = 100;
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            runGrid.Columns.Add(column);
+
+            column = new DataGridViewTextBoxColumn();
+            column.Name = "Switch Time";
             column.Width = 100;
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;

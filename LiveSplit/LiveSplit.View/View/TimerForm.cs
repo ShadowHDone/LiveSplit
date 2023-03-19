@@ -183,7 +183,7 @@ namespace LiveSplit.View
 
             SetWindowTitle();
 
-            SpeedrunCom.Authenticator = new SpeedrunComApiKeyPrompt();
+            //SpeedrunCom.Authenticator = new SpeedrunComApiKeyPrompt();
 
             GlobalCache = new GraphicsCache();
             Invalidator = new Invalidator(this);
@@ -651,7 +651,7 @@ namespace LiveSplit.View
 
         private void Hook_GamepadHookInitialized(object sender, EventArgs e)
         {
-            CheckForUpdates();
+            //CheckForUpdates();
         }
 
         private void CheckForUpdates()

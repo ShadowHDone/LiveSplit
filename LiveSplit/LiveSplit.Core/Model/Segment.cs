@@ -17,10 +17,11 @@ namespace LiveSplit.Model
         public IComparisons Comparisons { get; set; }
         public Time BestSegmentTime { get; set; }
         public Time SplitTime { get; set; }
-        public SegmentHistory SegmentHistory { get; set;}
-        
+        public SegmentHistory SegmentHistory { get; set; }
+        public Time SwitchTime { get; set; }
+
         public Segment(
-            string name, Time pbSplitTime = default(Time), 
+            string name, Time pbSplitTime = default(Time),
             Time bestSegmentTime = default(Time), Image icon = null,
             Time splitTime = default(Time))
         {
