@@ -77,6 +77,8 @@ namespace LiveSplit.Model.RunSavers
                 }
                 splitElement.AppendChild(splitTimes);
 
+                splitElement.AppendChild(segment.SwitchTime.ToXml(document, "SwitchTime"));
+
                 splitElement.AppendChild(segment.BestSegmentTime.ToXml(document, "BestSegmentTime"));
 
                 var history = document.CreateElement("SegmentHistory");

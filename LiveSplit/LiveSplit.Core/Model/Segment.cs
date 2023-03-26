@@ -40,6 +40,7 @@ namespace LiveSplit.Model
 
             return new Segment(Name)
             {
+                SwitchTime = SwitchTime,
                 BestSegmentTime = BestSegmentTime,
                 SplitTime = SplitTime,
                 Icon = Icon,

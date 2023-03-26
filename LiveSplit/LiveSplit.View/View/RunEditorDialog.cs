@@ -406,7 +406,7 @@ namespace LiveSplit.View
 
         private void eCtl_TextChanged(object sender, EventArgs e)
         {
-            if (runGrid.CurrentCell.ColumnIndex == SPLITTIMEINDEX || runGrid.CurrentCell.ColumnIndex == BESTSEGMENTINDEX || runGrid.CurrentCell.ColumnIndex == SEGMENTTIMEINDEX || runGrid.CurrentCell.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
+            if (runGrid.CurrentCell.ColumnIndex == SPLITTIMEINDEX || runGrid.CurrentCell.ColumnIndex == BESTSEGMENTINDEX || runGrid.CurrentCell.ColumnIndex == SEGMENTTIMEINDEX || runGrid.CurrentCell.ColumnIndex == SWITCHTIMEINDEX || runGrid.CurrentCell.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
             {
                 if (Regex.IsMatch(eCtl.Text, "[^0-9:.]"))
                 {
@@ -417,7 +417,7 @@ namespace LiveSplit.View
 
         private void eCtl_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (runGrid.CurrentCell.ColumnIndex == SPLITTIMEINDEX || runGrid.CurrentCell.ColumnIndex == BESTSEGMENTINDEX || runGrid.CurrentCell.ColumnIndex == SEGMENTTIMEINDEX || runGrid.CurrentCell.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
+            if (runGrid.CurrentCell.ColumnIndex == SPLITTIMEINDEX || runGrid.CurrentCell.ColumnIndex == BESTSEGMENTINDEX || runGrid.CurrentCell.ColumnIndex == SEGMENTTIMEINDEX || runGrid.CurrentCell.ColumnIndex == SWITCHTIMEINDEX || runGrid.CurrentCell.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
             {
                 if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != ':' && e.KeyChar != '.' && e.KeyChar != ',')
                 {
@@ -433,7 +433,7 @@ namespace LiveSplit.View
 
         void runGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            if (e.ColumnIndex == SPLITTIMEINDEX || e.ColumnIndex == BESTSEGMENTINDEX || e.ColumnIndex == SEGMENTTIMEINDEX || e.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
+            if (e.ColumnIndex == SPLITTIMEINDEX || e.ColumnIndex == BESTSEGMENTINDEX || e.ColumnIndex == SEGMENTTIMEINDEX || runGrid.CurrentCell.ColumnIndex == SWITCHTIMEINDEX || e.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
             {
                 if (string.IsNullOrWhiteSpace(e.FormattedValue.ToString()))
                     return;
@@ -492,6 +492,12 @@ namespace LiveSplit.View
                     if (shouldFix)
                         FixSplitsFromSegments();
                 }
+                if (columnIndex == SWITCHTIMEINDEX)
+                {
+                    var time = new Time(Run[rowIndex].SwitchTime);
+                    time[SelectedMethod] = null;
+                    Run[rowIndex].SwitchTime = time;
+                }
                 if (columnIndex >= CUSTOMCOMPARISONSINDEX)
                 {
                     var time = new Time(Run[rowIndex].Comparisons[runGrid.Columns[columnIndex].Name]);
@@ -531,6 +537,12 @@ namespace LiveSplit.View
                     time[SelectedMethod] = (TimeSpan)value;
                     Run[rowIndex].BestSegmentTime = time;
                 }
+                if (columnIndex == SWITCHTIMEINDEX)
+                {
+                    var time = new Time(Run[rowIndex].SwitchTime);
+                    time[SelectedMethod] = (TimeSpan)value;
+                    Run[rowIndex].SwitchTime = time;
+                }
                 if (shouldFix)
                     Fix();
                 TimesModified();
@@ -562,6 +574,20 @@ namespace LiveSplit.View
                 else if (e.ColumnIndex == BESTSEGMENTINDEX)
                 {
                     var comparisonValue = Run[e.RowIndex].BestSegmentTime[SelectedMethod];
+                    if (comparisonValue == null)
+                    {
+                        e.Value = "";
+                        e.FormattingApplied = false;
+                    }
+                    else
+                    {
+                        e.Value = TimeFormatter.Format(comparisonValue);
+                        e.FormattingApplied = true;
+                    }
+                }
+                if (e.ColumnIndex == SWITCHTIMEINDEX)
+                {
+                    var comparisonValue = Run[e.RowIndex].SwitchTime[SelectedMethod];
                     if (comparisonValue == null)
                     {
                         e.Value = "";
@@ -681,6 +707,7 @@ namespace LiveSplit.View
             runGrid.InvalidateColumn(SPLITTIMEINDEX);
             runGrid.InvalidateColumn(BESTSEGMENTINDEX);
             runGrid.InvalidateColumn(SEGMENTTIMEINDEX);
+            runGrid.InvalidateColumn(SWITCHTIMEINDEX);
             for (var index = CUSTOMCOMPARISONSINDEX; index < runGrid.Columns.Count; index++)
                 runGrid.InvalidateColumn(index);
         }
@@ -983,6 +1010,12 @@ namespace LiveSplit.View
                             var time = new Time(Run[selectedCell.RowIndex].BestSegmentTime);
                             time[SelectedMethod] = null;
                             Run[selectedCell.RowIndex].BestSegmentTime = time;
+                        }
+                        else if (selectedCell.ColumnIndex == SWITCHTIMEINDEX)
+                        {
+                            var time = new Time(Run[selectedCell.RowIndex].SwitchTime);
+                            time[SelectedMethod] = null;
+                            Run[selectedCell.RowIndex].SwitchTime = time;
                         }
                         else if (selectedCell.ColumnIndex >= CUSTOMCOMPARISONSINDEX)
                         {

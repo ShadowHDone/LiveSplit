@@ -86,6 +86,8 @@ namespace LiveSplit.View
         const int WS_MINIMIZEBOX = 0x20000;
         const int CS_DBLCLKS = 0x8;
 
+        private System.Timers.Timer SwitchTimer = new System.Timers.Timer();
+
         protected override CreateParams CreateParams
         {
             get
@@ -1053,18 +1055,36 @@ namespace LiveSplit.View
             if (CurrentState.CurrentPhase == TimerPhase.Running)
             {
                 Model.Split();
+                if (this.SwitchTimer.Enabled)
+                {
+                    var switchInterval = CurrentState.CurrentSplit?.SwitchTime.RealTime.Value.TotalMilliseconds;
+                    if (switchInterval.HasValue && switchInterval > 0)
+                    {
+                        this.SwitchTimer.Interval = switchInterval.Value;
+                        this.SwitchTimer.Elapsed += switchTimer_Elapsed;
+                    }
+                }
             }
             else if (CurrentState.CurrentPhase == TimerPhase.Paused)
             {
                 Model.Pause();
+                this.SwitchTimer.Enabled = false;
             }
             else if (CurrentState.CurrentPhase == TimerPhase.NotRunning)
             {
                 Model.Start();
+                var switchInterval = CurrentState.CurrentSplit.SwitchTime.RealTime?.TotalMilliseconds;
+                if (switchInterval.HasValue && switchInterval > 0)
+                {
+                    this.SwitchTimer.Interval = switchInterval.Value;
+                    this.SwitchTimer.Enabled = true;
+                    this.SwitchTimer.Elapsed += switchTimer_Elapsed;
+                }
             }
             else if (CurrentState.CurrentPhase == TimerPhase.Ended)
             {
                 Model.Reset();
+                this.SwitchTimer.Enabled = false;
             }
         }
 
@@ -1151,6 +1171,12 @@ namespace LiveSplit.View
         void splitTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             ((System.Timers.Timer)sender).Stop();
+            StartOrSplit();
+        }
+
+        void switchTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            var timer = (System.Timers.Timer)sender;
             StartOrSplit();
         }
 
