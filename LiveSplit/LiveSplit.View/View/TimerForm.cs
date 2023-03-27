@@ -86,7 +86,10 @@ namespace LiveSplit.View
         const int WS_MINIMIZEBOX = 0x20000;
         const int CS_DBLCLKS = 0x8;
 
-        private System.Timers.Timer SwitchTimer = new System.Timers.Timer();
+        private System.Timers.Timer SwitchTimer = new System.Timers.Timer()
+        {
+            AutoReset = false,
+        };
 
         protected override CreateParams CreateParams
         {
@@ -1055,15 +1058,7 @@ namespace LiveSplit.View
             if (CurrentState.CurrentPhase == TimerPhase.Running)
             {
                 Model.Split();
-                if (this.SwitchTimer.Enabled)
-                {
-                    var switchInterval = CurrentState.CurrentSplit?.SwitchTime.RealTime.Value.TotalMilliseconds;
-                    if (switchInterval.HasValue && switchInterval > 0)
-                    {
-                        this.SwitchTimer.Interval = switchInterval.Value;
-                        this.SwitchTimer.Elapsed += switchTimer_Elapsed;
-                    }
-                }
+                AutoSwitch();
             }
             else if (CurrentState.CurrentPhase == TimerPhase.Paused)
             {
@@ -1073,18 +1068,25 @@ namespace LiveSplit.View
             else if (CurrentState.CurrentPhase == TimerPhase.NotRunning)
             {
                 Model.Start();
-                var switchInterval = CurrentState.CurrentSplit.SwitchTime.RealTime?.TotalMilliseconds;
-                if (switchInterval.HasValue && switchInterval > 0)
-                {
-                    this.SwitchTimer.Interval = switchInterval.Value;
-                    this.SwitchTimer.Enabled = true;
-                    this.SwitchTimer.Elapsed += switchTimer_Elapsed;
-                }
+                AutoSwitch();
             }
             else if (CurrentState.CurrentPhase == TimerPhase.Ended)
             {
                 Model.Reset();
-                this.SwitchTimer.Enabled = false;
+            }
+        }
+
+        private void AutoSwitch()
+        {
+            // There might be support of 'pause' function in the future
+            //var currentTime = CurrentState.CurrentTime;
+            var timingMethod = CurrentState.CurrentTimingMethod;
+            var switchInterval = CurrentState.CurrentSplit?.SwitchTime[timingMethod]?.TotalMilliseconds;
+            if (switchInterval.HasValue && switchInterval > 0)
+            {
+                this.SwitchTimer.Interval = switchInterval.Value;
+                this.SwitchTimer.Enabled = true;
+                this.SwitchTimer.Elapsed += switchTimer_Elapsed;
             }
         }
 
@@ -1176,7 +1178,6 @@ namespace LiveSplit.View
 
         void switchTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            var timer = (System.Timers.Timer)sender;
             StartOrSplit();
         }
 
