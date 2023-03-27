@@ -1,12 +1,15 @@
 ﻿using LiveSplit.Model.Comparisons;
 using LiveSplit.UI;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using static LiveSplit.UI.SettingsHelper;
 
 namespace LiveSplit.Model.RunFactories
@@ -73,9 +76,16 @@ namespace LiveSplit.Model.RunFactories
             return Image.FromStream(stream);
         }
 
+        [Serializable]
+        public class SeriazableRun
+        {
+            public Segment[] Segments;
+        }
+
         public IRun Create(IComparisonGeneratorsFactory factory)
         {
             LiveSplitCore.ParseRunResult result = null;
+            IEnumerable<XElement> xSegments = null;
             if (Stream is FileStream)
             {
                 var handle = (Stream as FileStream).SafeFileHandle;
@@ -83,6 +93,12 @@ namespace LiveSplit.Model.RunFactories
                 {
                     result = LiveSplitCore.Run.ParseFileHandle((long)handle.DangerousGetHandle(), FilePath, !string.IsNullOrEmpty(FilePath));
                 }
+
+                Stream.Seek(0, SeekOrigin.Begin);
+
+                var xdoc = XDocument.Load(Stream);
+                xSegments = xdoc.Element("Run").Element("Segments").Elements("Segment");
+
             }
             if (result == null)
             {
@@ -166,6 +182,17 @@ namespace LiveSplit.Model.RunFactories
                         }
                     }
 
+                    var xElementReader = xSegments.ToArray()[i].Element("SwitchTime").CreateReader();
+                    var xmlDocument = new XmlDocument();
+                    using (var xmlReader = xElementReader)
+                    {
+                        xmlDocument.Load(xmlReader);
+                    }
+                    if (xmlDocument.DocumentElement != null)
+                    {
+                        split.SplitTime = Time.FromXml(xmlDocument.DocumentElement);
+                    }
+                    
                     run.Add(split);
                 }
 
@@ -179,6 +206,7 @@ namespace LiveSplit.Model.RunFactories
 
                 if (run.Count < 1)
                     throw new Exception("Run factory created a run without at least one segment");
+
 
                 return run;
             }

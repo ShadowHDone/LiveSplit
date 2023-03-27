@@ -23,7 +23,7 @@ namespace LiveSplit.Model
         public Segment(
             string name, Time pbSplitTime = default(Time),
             Time bestSegmentTime = default(Time), Image icon = null,
-            Time splitTime = default(Time))
+            Time splitTime = default(Time), Time switchTime = default(Time))
         {
             Comparisons = new CompositeComparisons();
             Name = name;
@@ -32,6 +32,7 @@ namespace LiveSplit.Model
             SplitTime = splitTime;
             Icon = icon;
             SegmentHistory = new SegmentHistory();
+            SwitchTime = switchTime;
         }
 
         public Segment Clone()
@@ -40,11 +41,11 @@ namespace LiveSplit.Model
 
             return new Segment(Name)
             {
-                SwitchTime = SwitchTime,
                 BestSegmentTime = BestSegmentTime,
                 SplitTime = SplitTime,
                 Icon = Icon,
                 SegmentHistory = newSegmentHistory,
+                SwitchTime = SwitchTime,
                 Comparisons = (IComparisons)Comparisons.Clone()
             };
         }

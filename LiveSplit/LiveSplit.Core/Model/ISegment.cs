@@ -12,7 +12,7 @@ namespace LiveSplit.Model
         IComparisons Comparisons { get; set; }
         Time BestSegmentTime { get; set; }
         Time SplitTime { get; set; }
-        Time SwitchTime { get; set; }
         SegmentHistory SegmentHistory { get; set; }
+        Time SwitchTime { get; set; }
     }
 }

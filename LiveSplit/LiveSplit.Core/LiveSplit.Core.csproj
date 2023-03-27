@@ -92,6 +92,7 @@
     <Reference Include="System.Xaml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="WinFormsColor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -321,6 +322,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\loader.jar" />
+    <None Include="packages.config" />
     <None Include="Updates\GitInfo\revision.txt" />
     <None Include="Updates\GitInfo\version.txt" />
     <None Include="Updates\GitInfo\branch.txt" />
