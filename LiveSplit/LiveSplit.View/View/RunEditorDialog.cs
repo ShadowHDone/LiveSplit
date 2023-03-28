@@ -429,6 +429,12 @@ namespace LiveSplit.View
         void runGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             runGrid.Rows[e.RowIndex].ErrorText = "";
+
+
+            if (runGrid.CurrentCell.ColumnIndex == SWITCHTIMEINDEX)
+            {
+                CalculateTotalSwitchTime();
+            }
         }
 
         void runGrid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -1238,6 +1244,7 @@ namespace LiveSplit.View
             FillCbxGameName();
             cbxGameName.UpdateUI();
             InitializeUseLayoutUI();
+            CalculateTotalSwitchTime();
         }
 
         private void picGameIcon_MouseUp(object sender, MouseEventArgs e)
@@ -1786,6 +1793,73 @@ namespace LiveSplit.View
                    && info.ColumnIndex != -1
                    && runGrid.Columns[info.ColumnIndex] is DataGridViewImageColumn
                    && info.Type == DataGridViewHitTestType.Cell;
+        }
+
+        private void SwitchTimeStyleCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculateSwitchTime(SwitchTimeStyleCheck.Checked);
+        }
+
+        private void CalculateSwitchTime(bool TotalStyle)
+        {
+            var current = new TimeSpan();
+            if (TotalStyle)
+            {
+                for (var i = 0; i < runGrid.Rows.Count; i++)
+                {
+                    try
+                    {
+                        var time = TimeSpanParser.ParseNullable(runGrid.Rows[i].Cells[SWITCHTIMEINDEX].FormattedValue?.ToString());
+                        if (time.HasValue)
+                        {
+                            current += time.Value;
+                        }
+                        runGrid.Rows[i].Cells[SWITCHTIMEINDEX].Value = current;
+                    }
+                    catch
+                    {
+
+                    }
+
+                }
+                return;
+            }
+
+            for (var i = 0; i < runGrid.Rows.Count; i++)
+            {
+                try
+                {
+                    var time = TimeSpanParser.ParseNullable(runGrid.Rows[i].Cells[SWITCHTIMEINDEX].FormattedValue?.ToString());
+                    if (time.HasValue)
+                    {
+                        var temp = time - current;
+                        time -= current;
+                        current = temp.Value;
+                    }
+                    runGrid.Rows[i].Cells[SWITCHTIMEINDEX].Value = time.Value;
+                }
+                catch
+                {
+
+                }
+
+            }
+
+        }
+
+        private void CalculateTotalSwitchTime()
+        {
+            var totalTime = new TimeSpan();
+            foreach (DataGridViewRow row in runGrid.Rows)
+            {
+                var time = TimeSpanParser.ParseNullable(row.Cells[SWITCHTIMEINDEX].FormattedValue?.ToString());
+                if (time.HasValue)
+                {
+                    totalTime += time.Value;
+                }
+            }
+
+            this.TotalSwitchTimeLable.Text = $"Run ends in {totalTime.ToString(@"hh\:mm\:ss\.ff")}";
         }
     }
 

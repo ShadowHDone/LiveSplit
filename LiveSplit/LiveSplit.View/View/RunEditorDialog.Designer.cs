@@ -66,6 +66,8 @@
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
             this.lblDescription = new System.Windows.Forms.Label();
+            this.SwitchTimeStyleCheck = new System.Windows.Forms.CheckBox();
+            this.TotalSwitchTimeLable = new System.Windows.Forms.Label();
             this.RemoveIconMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setIconToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadBoxartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,8 +84,6 @@
             this.cleanSumOfBestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iRunBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.iSegmentBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.SwitchTimeStyleCheck = new System.Windows.Forms.CheckBox();
-            this.TotalSwitchTimeLable = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.runGrid)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picGameIcon)).BeginInit();
@@ -595,6 +595,32 @@
             this.lblDescription.TabIndex = 13;
             this.lblDescription.Text = "Description";
             // 
+            // SwitchTimeStyleCheck
+            // 
+            this.SwitchTimeStyleCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SwitchTimeStyleCheck.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.SwitchTimeStyleCheck, 3);
+            this.SwitchTimeStyleCheck.Location = new System.Drawing.Point(145, 154);
+            this.SwitchTimeStyleCheck.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.SwitchTimeStyleCheck.Name = "SwitchTimeStyleCheck";
+            this.SwitchTimeStyleCheck.Size = new System.Drawing.Size(135, 17);
+            this.SwitchTimeStyleCheck.TabIndex = 22;
+            this.SwitchTimeStyleCheck.Text = "Total Switch Time style";
+            this.SwitchTimeStyleCheck.UseVisualStyleBackColor = true;
+            this.SwitchTimeStyleCheck.CheckedChanged += new System.EventHandler(this.SwitchTimeStyleCheck_CheckedChanged);
+            // 
+            // TotalSwitchTimeLable
+            // 
+            this.TotalSwitchTimeLable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.TotalSwitchTimeLable.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.TotalSwitchTimeLable, 4);
+            this.TotalSwitchTimeLable.Location = new System.Drawing.Point(140, 486);
+            this.TotalSwitchTimeLable.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
+            this.TotalSwitchTimeLable.Name = "TotalSwitchTimeLable";
+            this.TotalSwitchTimeLable.Size = new System.Drawing.Size(281, 13);
+            this.TotalSwitchTimeLable.TabIndex = 23;
+            this.TotalSwitchTimeLable.Text = "There are no any data for auto switching";
+            // 
             // RemoveIconMenu
             // 
             this.RemoveIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -708,31 +734,6 @@
             // iSegmentBindingSource
             // 
             this.iSegmentBindingSource.DataSource = typeof(LiveSplit.Model.ISegment);
-            // 
-            // SwitchTimeStyleCheck
-            // 
-            this.SwitchTimeStyleCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.SwitchTimeStyleCheck.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.SwitchTimeStyleCheck, 3);
-            this.SwitchTimeStyleCheck.Location = new System.Drawing.Point(145, 154);
-            this.SwitchTimeStyleCheck.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
-            this.SwitchTimeStyleCheck.Name = "SwitchTimeStyleCheck";
-            this.SwitchTimeStyleCheck.Size = new System.Drawing.Size(135, 17);
-            this.SwitchTimeStyleCheck.TabIndex = 22;
-            this.SwitchTimeStyleCheck.Text = "Total Switch Time style";
-            this.SwitchTimeStyleCheck.UseVisualStyleBackColor = true;
-            // 
-            // TotalSwitchTimeLable
-            // 
-            this.TotalSwitchTimeLable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.TotalSwitchTimeLable.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.TotalSwitchTimeLable, 4);
-            this.TotalSwitchTimeLable.Location = new System.Drawing.Point(140, 486);
-            this.TotalSwitchTimeLable.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
-            this.TotalSwitchTimeLable.Name = "TotalSwitchTimeLable";
-            this.TotalSwitchTimeLable.Size = new System.Drawing.Size(281, 13);
-            this.TotalSwitchTimeLable.TabIndex = 23;
-            this.TotalSwitchTimeLable.Text = "There are no any data for auto switching";
             // 
             // RunEditorDialog
             // 
