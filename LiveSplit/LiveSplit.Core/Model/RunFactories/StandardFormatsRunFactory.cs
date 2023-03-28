@@ -190,7 +190,7 @@ namespace LiveSplit.Model.RunFactories
                     }
                     if (xmlDocument.DocumentElement != null)
                     {
-                        split.SplitTime = Time.FromXml(xmlDocument.DocumentElement);
+                        split.SwitchTime = Time.FromXml(xmlDocument.DocumentElement);
                     }
                     
                     run.Add(split);
